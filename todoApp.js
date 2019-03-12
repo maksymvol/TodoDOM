@@ -1,4 +1,5 @@
 let editingTaskIndex = -1;
+let editingListIndex = -1;
 let currentListIndex = 0;
 
 function setup() {
@@ -74,7 +75,6 @@ function toggleCurrentList(listName) {
     let newId = currentListIndex;
     const tasks = JSON.parse(localStorage["tasks"]);
     for (let i = 0; i < tasks.length; i++) {
-        console.log(tasks[i].name, listName);
         if (tasks[i].name === listName) {
             newId = i;
             break;
@@ -89,11 +89,12 @@ function toggleCurrentList(listName) {
 }
 
 function deleteList(index) {
-    console.log("delete list" + index);
-}
-
-function editListName(index) {
-    console.log("Edit list name" + index);
+    const tasks = JSON.parse(localStorage["tasks"]);
+    tasks.splice(index, 1);
+    localStorage["tasks"] = JSON.stringify(tasks);
+    currentListIndex = index - 1;
+    displayAllLists();
+    displayAllTasks();
 }
 
 function addNewTask() {
@@ -155,7 +156,6 @@ function displayAllLists() {
         const li = document.createElement('li');
         li.appendChild(document.createTextNode(tasks[i].name));
         li.appendChild(createDeleteButton(i, deleteList, "list"));
-        li.appendChild(createEditButton(i, editListName));
         container.appendChild(li);
     }
 
