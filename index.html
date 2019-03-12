@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo app</title>
+
+    <link rel="stylesheet" href="main.css">
+    <script src="todoApp.js"></script>
+</head>
+<body>
+
+<div id="app-container">
+    <div id="tasks-current-list-container">
+        <header>
+            <input type="text" id="task-input" placeholder="There would be your task...">
+            <span onclick="addNewTask()" id="task-add-button">Add</span>
+        </header>
+
+        <ul id="tasks"></ul>
+    </div>
+    <div id="task-lists-container">
+        <ul id="task-lists"></ul>
+    </div>
+</div>
+
+<script>setup();</script>
+</body>
+</html>

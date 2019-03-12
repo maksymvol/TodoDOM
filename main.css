@@ -1,0 +1,89 @@
+#app-container {
+    display: flex;
+}
+
+#task-lists-container {
+    padding-top: 2%;
+    padding-right: 10%;
+}
+
+#tasks-current-list-container {
+    flex: 1;
+}
+
+#task-add-button {
+    cursor: pointer;
+    background: darkgray;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul li {
+    cursor: pointer;
+    position: relative;
+    padding: 12px 8px 12px 40px;
+    background: ghostwhite;
+    font-size: 18px;
+    transition: 0.2s;
+}
+
+ul li:hover {
+    background: #ddd;
+}
+
+ul li.checked {
+    background: #888;
+    color: #fff;
+    text-decoration: line-through;
+}
+
+ul li.checked::before {
+    content: '';
+    position: absolute;
+    border-color: #fff;
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    top: 10px;
+    left: 16px;
+    transform: rotate(45deg);
+    height: 15px;
+    width: 7px;
+}
+
+#task-add-button {
+    padding: 10px;
+    width: 25%;
+    background: oldlace;
+    color: gray;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.task-delete-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 12px 15px 12px 15px;
+}
+
+.task-delete-button:hover {
+    background: #f44336;
+    color: white;
+}
+
+.task-edit-button {
+    position: absolute;
+    top: 0;
+    right: 40px;
+    padding: 12px 30px 12px 30px;
+}
+
+.task-edit-button:hover {
+    background: darkgray;
+    color: white;
+}
