@@ -40,6 +40,23 @@ function setup() {
     displayAllLists();
 }
 
+function addNewList() {
+    const input = document.getElementById("new-list-input");
+
+    if (input.value == "") {
+        alert("Please type list name before adding it");
+    } else {
+        const newList = {list: [], name: input.value};
+        const tasks = JSON.parse(localStorage["tasks"]);
+        tasks.push(newList);
+        localStorage["tasks"] = JSON.stringify(tasks);
+        input.value = "";
+
+        displayAllTasks();
+        displayAllLists();
+    }
+}
+
 function toggleTaskChecked(taskName) {
     let newId = -1;
     const tasks = JSON.parse(localStorage["tasks"]);
@@ -146,8 +163,8 @@ function displayAllTasks() {
     for (let i = 0; i < tasks[currentListIndex].list.length; i++) {
         const li = document.createElement('li');
         li.appendChild(document.createTextNode(tasks[currentListIndex].list[i].item));
-        li.appendChild(createDeleteButton(i));
-        li.appendChild(createEditButton(i));
+        li.appendChild(createDeleteButton(i, deleteTask));
+        li.appendChild(createEditButton(i, editTask));
         container.appendChild(li);
     }
 
@@ -158,24 +175,24 @@ function displayAllTasks() {
     }
 }
 
-function createDeleteButton(index) {
+function createDeleteButton(index, targetFunction) {
     const span = document.createElement("SPAN");
     span.className = "task-delete-button";
     span.appendChild(document.createTextNode("×"));
     span.onclick = function () {
         if (confirm("You really want to delete this task?")) {
-            deleteTask(index);
+            targetFunction(index);
         }
     };
     return span;
 }
 
-function createEditButton(index) {
+function createEditButton(index, targetFunction) {
     const i = document.createElement("i");
     i.className = "task-edit-button";
     i.appendChild(document.createTextNode("Edit"));
     i.onclick = function () {
-        editTask(index);
+        targetFunction(index);
 
     };
     return i;

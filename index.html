@@ -11,6 +11,7 @@
 
 <div id="app-container">
     <div id="tasks-current-list-container">
+        <h3>TODO app</h3>
         <header>
             <input type="text" id="task-input" placeholder="There would be your task...">
             <span onclick="addNewTask()" id="task-add-button">Add</span>
@@ -20,6 +21,10 @@
     </div>
     <div id="task-lists-container">
         <h3>Task lists</h3>
+        <header>
+            <input type="text" id="new-list-input" placeholder="New list title">
+            <span onclick="addNewList()" id="lists-add-button">Add</span>
+        </header>
         <ul id="task-lists"></ul>
     </div>
 </div>
