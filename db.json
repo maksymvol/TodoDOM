@@ -1,20 +1,42 @@
 {
   "lists": [
-    "list1",
-    "list2"
+    {
+      "name": "Tasks tutorial"
+    },
+    {
+      "name": "Personal"
+    }
   ],
   "tasks": [
     {
       "id": 0,
-      "name": "task1",
-      "list": "list1",
-      "checked": true
+      "name": "You can add new task: type it and press 'Add' button",
+      "list": "Tasks tutorial",
+      "checked": false
     },
     {
       "id": 1,
-      "name": "task2",
-      "list": "list2",
+      "name": "Click on task to complete it",
+      "list": "Tasks tutorial",
+      "checked": true
+    },
+    {
+      "id": 2,
+      "name": "Delete task by pressing 'x' button on it",
+      "list": "Tasks tutorial",
       "checked": false
+    },
+    {
+      "id": 3,
+      "name": "Edit task -> click on 'Edit' button",
+      "list": "Tasks tutorial",
+      "checked": false
+    },
+    {
+      "id": 4,
+      "name": "uughhh... Some boring info",
+      "list": "Personal",
+      "checked": true
     }
   ]
 }

@@ -6,15 +6,6 @@ let tasks = [];
 async function setup() {
     await getListsFromDB();
     await getTasksFromDB();
-    if (!lists) {
-        const list1 = [{item: "You can add new task: type it and press 'Add' button", checked: false},
-            {item: "Click on task to complete it", checked: true},
-            {item: "Delete task by pressing 'x' button on it", checked: false},
-            {item: "Edit task -> click on 'Edit' button", checked: false}];
-        const list2 = [{item: "uughhh... Some boring info", checked: true}];
-        const lists = [{list: list1, name: "Tasks tutorial"}, {list: list2, name: "Personal"}];
-        localStorage["tasks"] = JSON.stringify(lists);
-    }
 
     document.getElementById("task-input").onkeypress = function (event) {
         if (event.key === "Enter") {
@@ -154,10 +145,9 @@ function rerender() {
 function displayAllLists() {
     let container = document.getElementById("task-lists");
     container.innerHTML = "";
-    const tasks = JSON.parse(localStorage["tasks"]);
-    for (let i = 0; i < tasks.length; i++) {
+    for (let i = 0; i < lists.length; i++) {
         const li = document.createElement('li');
-        li.appendChild(document.createTextNode(tasks[i].name));
+        li.appendChild(document.createTextNode(lists[i].name));
         li.appendChild(createDeleteButton(i, deleteList, "list"));
         container.appendChild(li);
     }
@@ -173,7 +163,7 @@ function displayAllTasks() {
     let container = document.getElementById("tasks");
     container.innerHTML = "";
     for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].list === lists[currentListIndex]) {
+        if (tasks[i].list === lists[currentListIndex].name) {
             const li = document.createElement('li');
             li.appendChild(document.createTextNode(tasks[i].name));
             li.appendChild(createDeleteButton(i, deleteTask, "task"));
@@ -184,8 +174,10 @@ function displayAllTasks() {
 
     disableAllFlagsInUL("tasks", "checked");
     for (let i = 0; i < container.childNodes.length; i++) {
-        if (tasks[currentListIndex].list[i].checked)
-            container.childNodes[i].classList.add("checked");
+        if (tasks[i].list === lists[currentListIndex]) {
+            if (tasks[i].checked)
+                container.childNodes[i].classList.add("checked");
+        }
     }
 }
 
