@@ -127,14 +127,21 @@ async function editTask(index) {
     input.onkeyup = async function (event) {
         if (event.key === "Enter") {
             await createPatch('tasks', index, {name: this.value, checked: false, list: lists[currentListIndex].name});
+            await getTasksFromDB();
             await rerender();
-            console.log("test")
         }
         if (event.key === "Escape") {
             await rerender();
         }
     };
-    input.value = tasks[index].name;
+    let taskIndex = 0;
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].id === index) {
+            taskIndex = i;
+            break;
+        }
+    }
+    input.value = tasks[taskIndex].name;
     nodeList[newIndex].removeChild(childNodes[0]);
     nodeList[newIndex].appendChild(input);
 
