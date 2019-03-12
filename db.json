@@ -14,7 +14,7 @@
       "id": 0,
       "name": "You can add new task: type it and press 'Add' button",
       "list": "Tasks tutorial",
-      "checked": true
+      "checked": false
     },
     {
       "id": 1,
@@ -44,7 +44,7 @@
       "id": 5,
       "name": "uughhh... Some boring info",
       "list": "Personal",
-      "checked": true
+      "checked": false
     }
   ]
 }

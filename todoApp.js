@@ -63,29 +63,27 @@ async function toggleTaskChecked(taskName) {
     task.checked = !task.checked;
     await createPatch('tasks', newId, task);
     await getTasksFromDB();
-    //tasks[currentListIndex].list[newId].checked = !tasks[currentListIndex].list[newId].checked;
 }
 
 function toggleCurrentList(listName) {
     let newId = currentListIndex;
-    const tasks = JSON.parse(localStorage["tasks"]);
-    for (let i = 0; i < tasks.length; i++) {
-        if (tasks[i].name === listName) {
+    for (let i = 0; i < lists.length; i++) {
+        if (lists[i].name === listName) {
             newId = i;
             break;
         }
     }
 
-    if (newId >= 0 && newId < tasks.length) {
+    if (newId >= 0 && newId < lists.length) {
         currentListIndex = newId;
         rerender();
     }
 }
 
-function deleteList(index) {
-    const tasks = JSON.parse(localStorage["tasks"]);
-    tasks.splice(index, 1);
-    localStorage["tasks"] = JSON.stringify(tasks);
+async function deleteList(index) {
+    await deleteElementFromDB('lists', index);
+    await getListsFromDB();
+    await getTasksFromDB();
     currentListIndex = index - 1;
     rerender();
 }
@@ -219,31 +217,51 @@ function disableAllFlagsInUL(listId, toggleElementId) {
 //JSON SERVER METHODS
 async function getListsFromDB() {
     const response = await fetch(baseURL + '/lists')
-        const data = await response.json()
-        lists = JSON.parse(JSON.stringify(data));
+    const data = await response.json()
+    lists = JSON.parse(JSON.stringify(data));
 }
 
 async function getTasksFromDB() {
     const response = await fetch(baseURL + '/tasks');
-        const data = await response.json();
-        tasks = JSON.parse(JSON.stringify(data));
+    const data = await response.json();
+    tasks = JSON.parse(JSON.stringify(data));
 }
 
 async function postRequest(url, data) {
-        const rawResponse = await fetch(baseURL + '/' + url, {
-            method: 'POST',
-            body: JSON.stringify(data),
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            })
-        });
-        const content = await rawResponse.json();
+    const rawResponse = await fetch(baseURL + '/' + url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        })
+    });
+    const content = await rawResponse.json();
 }
 
 async function createPatch(url, id, data) {
-    console.log(id,data);
     const rawResponse = await fetch(baseURL + '/' + url + '/' + id, {
         method: 'PATCH',
+        body: JSON.stringify(data),
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        })
+    });
+    const content = await rawResponse.json();
+}
+
+async function deleteElementFromDB(url, id) {
+    const rawResponse = await fetch(baseURL + '/' + url + '/' + id, {
+        method: 'DELETE',
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        })
+    });
+    const content = await rawResponse.json();
+}
+
+async function updateDB(url, data) {
+    const rawResponse = await fetch(baseURL + '/' + url, {
+        method: 'PUT',
         body: JSON.stringify(data),
         headers: new Headers({
             'Content-Type': 'application/json'

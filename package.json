@@ -1,0 +1,23 @@
+{
+  "name": "todo-dom-rest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "todoApp.js",
+  "dependencies": {},
+  "devDependencies": {
+    "json-server": "^0.14.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maksymvol/TodoDOM.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maksymvol/TodoDOM/issues"
+  },
+  "homepage": "https://github.com/maksymvol/TodoDOM#readme"
+}
