@@ -120,7 +120,7 @@ function editTask(index) {
     const nodeList = document.getElementsByTagName("LI");
     const childNodes = nodeList[index].childNodes;
     const input = document.createElement("INPUT");
-    input.focus();
+    input.className = "editTaskInput";
     input.onkeyup = function (event) {
         if (event.key === "Enter") {
             const tasks = JSON.parse(localStorage["tasks"]);
@@ -136,6 +136,9 @@ function editTask(index) {
     input.value = tasks[currentListIndex].list[index].item;
     nodeList[index].removeChild(childNodes[0]);
     nodeList[index].appendChild(input);
+
+    //SET FOCUS ON INPUT
+    document.getElementsByClassName("editTaskInput")[0].focus();
 }
 
 function rerender() {
