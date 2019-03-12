@@ -121,11 +121,14 @@ function editTask(index) {
     const childNodes = nodeList[index].childNodes;
     const input = document.createElement("INPUT");
     input.focus();
-    input.onkeypress = function (event) {
+    input.onkeyup = function (event) {
         if (event.key === "Enter") {
             const tasks = JSON.parse(localStorage["tasks"]);
             tasks[currentListIndex].list[index].item = this.value;
             localStorage["tasks"] = JSON.stringify(tasks);
+            rerender();
+        }
+        if (event.key === "Escape") {
             rerender();
         }
     };
