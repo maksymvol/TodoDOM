@@ -1,15 +1,13 @@
-let editingTaskIndex = -1;
-let editingListIndex = -1;
 let currentListIndex = 0;
 
 function setup() {
     if (!localStorage["tasks"]) {
-        const list1 = [{item: "Some Todo", checked: true},
-            {item: "Make Todo app", checked: false},
-            {item: "Please let me rest", checked: false},
-            {item: "Bring it new life", checked: false}];
+        const list1 = [{item: "You can add new task: type it and press 'Add' button", checked: false},
+            {item: "Click on task to complete it", checked: true},
+            {item: "Delete task by pressing 'x' button on it", checked: false},
+            {item: "Edit task -> click on 'Edit' button", checked: false}];
         const list2 = [{item: "uughhh... Some boring info", checked: true}];
-        const lists = [{list: list1, name: "work"}, {list: list2, name: "personal"}];
+        const lists = [{list: list1, name: "Tasks tutorial"}, {list: list2, name: "personal"}];
         localStorage["tasks"] = JSON.stringify(lists);
     }
 
@@ -37,8 +35,7 @@ function setup() {
         }
     }, false);
 
-    displayAllTasks();
-    displayAllLists();
+    rerender();
 }
 
 function addNewList() {
@@ -53,8 +50,7 @@ function addNewList() {
         localStorage["tasks"] = JSON.stringify(tasks);
         input.value = "";
 
-        displayAllTasks();
-        displayAllLists();
+        rerender();
     }
 }
 
@@ -83,8 +79,7 @@ function toggleCurrentList(listName) {
 
     if (newId >= 0 && newId < tasks.length) {
         currentListIndex = newId;
-        displayAllTasks();
-        displayAllLists();
+        rerender();
     }
 }
 
@@ -93,8 +88,7 @@ function deleteList(index) {
     tasks.splice(index, 1);
     localStorage["tasks"] = JSON.stringify(tasks);
     currentListIndex = index - 1;
-    displayAllLists();
-    displayAllTasks();
+    rerender();
 }
 
 function addNewTask() {
@@ -109,7 +103,7 @@ function addNewTask() {
         localStorage["tasks"] = JSON.stringify(tasks);
         input.value = "";
 
-        displayAllTasks();
+        rerender();
     }
 }
 
@@ -117,18 +111,11 @@ function deleteTask(index) {
     const tasks = JSON.parse(localStorage["tasks"]);
     tasks[currentListIndex].list.splice(index, 1);
     localStorage["tasks"] = JSON.stringify(tasks);
-    displayAllTasks();
+    rerender();
 }
 
 function editTask(index) {
-    if (editingTaskIndex === -1) {
-        editingTaskIndex = index;
-    } else {
-        if (editingTaskIndex === index) {
-            return;
-        }
-        editingTaskIndex = index;
-    }
+    rerender();
 
     const nodeList = document.getElementsByTagName("LI");
     const childNodes = nodeList[index].childNodes;
@@ -139,13 +126,18 @@ function editTask(index) {
             const tasks = JSON.parse(localStorage["tasks"]);
             tasks[currentListIndex].list[index].item = this.value;
             localStorage["tasks"] = JSON.stringify(tasks);
-            displayAllTasks();
+            rerender();
         }
     };
     const tasks = JSON.parse(localStorage["tasks"]);
-    input.innerText = tasks[currentListIndex].list[index].item;
+    input.value = tasks[currentListIndex].list[index].item;
     nodeList[index].removeChild(childNodes[0]);
     nodeList[index].appendChild(input);
+}
+
+function rerender() {
+    displayAllTasks();
+    displayAllLists();
 }
 
 function displayAllLists() {
