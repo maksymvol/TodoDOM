@@ -1,13 +1,18 @@
 let currentListIndex = 0;
+const baseURL = "http://localhost:3000";
+let lists = [];
+let tasks = [];
 
-function setup() {
-    if (!localStorage["tasks"]) {
+async function setup() {
+    await getListsFromDB();
+    await getTasksFromDB();
+    if (!lists) {
         const list1 = [{item: "You can add new task: type it and press 'Add' button", checked: false},
             {item: "Click on task to complete it", checked: true},
             {item: "Delete task by pressing 'x' button on it", checked: false},
             {item: "Edit task -> click on 'Edit' button", checked: false}];
         const list2 = [{item: "uughhh... Some boring info", checked: true}];
-        const lists = [{list: list1, name: "Tasks tutorial"}, {list: list2, name: "personal"}];
+        const lists = [{list: list1, name: "Tasks tutorial"}, {list: list2, name: "Personal"}];
         localStorage["tasks"] = JSON.stringify(lists);
     }
 
@@ -167,14 +172,14 @@ function displayAllLists() {
 function displayAllTasks() {
     let container = document.getElementById("tasks");
     container.innerHTML = "";
-    const tasks = JSON.parse(localStorage["tasks"]);
-
-    for (let i = 0; i < tasks[currentListIndex].list.length; i++) {
-        const li = document.createElement('li');
-        li.appendChild(document.createTextNode(tasks[currentListIndex].list[i].item));
-        li.appendChild(createDeleteButton(i, deleteTask, "task"));
-        li.appendChild(createEditButton(i, editTask));
-        container.appendChild(li);
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].list === lists[currentListIndex]) {
+            const li = document.createElement('li');
+            li.appendChild(document.createTextNode(tasks[i].name));
+            li.appendChild(createDeleteButton(i, deleteTask, "task"));
+            li.appendChild(createEditButton(i, editTask));
+            container.appendChild(li);
+        }
     }
 
     disableAllFlagsInUL("tasks", "checked");
@@ -215,3 +220,35 @@ function disableAllFlagsInUL(listId, toggleElementId) {
         }
     }
 }
+
+//JSON SERVER METHODS
+async function getListsFromDB() {
+    const response = await fetch(baseURL + '/lists')
+        const data = await response.json()
+        lists = JSON.parse(JSON.stringify(data));
+}
+
+async function getTasksFromDB() {
+    const response = await fetch(baseURL + '/tasks');
+        const data = await response.json();
+        tasks = JSON.parse(JSON.stringify(data));
+}
+
+function postRequest(url, data) {
+    (async () => {
+        const rawResponse = await fetch(baseURL + '/' + url, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        });
+        const content = await rawResponse.json();
+        getTasksFromDB();
+    })()
+}
+
+/*
+postRequest('tasks', {name: 'TASK TEST', list: "list1", checked: true})
+    .then(data => console.log(data))
+    .catch(error => console.error(error));*/
