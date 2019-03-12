@@ -88,27 +88,26 @@ async function deleteList(index) {
     rerender();
 }
 
-function addNewTask() {
+async function addNewTask() {
     const input = document.getElementById("task-input");
 
     if (input.value == "") {
         alert("Please type your task before adding it");
     } else {
-        const task = {item: input.value, checked: false};
-        const tasks = JSON.parse(localStorage["tasks"]);
-        tasks[currentListIndex].list.push(task);
-        localStorage["tasks"] = JSON.stringify(tasks);
-        input.value = "";
+        const task = {name: input.value, checked: false, list: lists[currentListIndex].name};
+        await postRequest('tasks', task);
 
-        rerender();
+        input.value = "";
+        await getTasksFromDB();
+        await rerender();
     }
 }
 
-function deleteTask(index) {
-    const tasks = JSON.parse(localStorage["tasks"]);
-    tasks[currentListIndex].list.splice(index, 1);
-    localStorage["tasks"] = JSON.stringify(tasks);
-    rerender();
+async function deleteTask(index) {
+    console.log(index);
+    await deleteElementFromDB('tasks', index);
+    await getTasksFromDB();
+    await rerender();
 }
 
 function editTask(index) {
@@ -149,7 +148,7 @@ function displayAllLists() {
     for (let i = 0; i < lists.length; i++) {
         const li = document.createElement('li');
         li.appendChild(document.createTextNode(lists[i].name));
-        li.appendChild(createDeleteButton(i, deleteList, "list"));
+        li.appendChild(createDeleteButton(lists[i].id, deleteList, "list"));
         container.appendChild(li);
     }
 
@@ -167,7 +166,7 @@ function displayAllTasks() {
         if (tasks[i].list === lists[currentListIndex].name) {
             const li = document.createElement('li');
             li.appendChild(document.createTextNode(tasks[i].name));
-            li.appendChild(createDeleteButton(i, deleteTask, "task"));
+            li.appendChild(createDeleteButton(tasks[i].id, deleteTask, "task"));
             li.appendChild(createEditButton(i, editTask));
             container.appendChild(li);
         }
