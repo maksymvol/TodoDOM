@@ -31,7 +31,7 @@ async function setup() {
         }
     }, false);
 
-    rerender();
+    await rerender();
 }
 
 async function addNewList() {
@@ -41,13 +41,11 @@ async function addNewList() {
         alert("Please type list name before adding it");
     } else {
         const newList = {name: input.value};
-        await postRequest('lists', newList)
-            .then(data => console.log(data))
-            .catch(error => console.error(error));
+        await postRequest('lists', newList);
         input.value = "";
 
         await getListsFromDB();
-        rerender();
+        await rerender();
     }
 }
 
@@ -65,7 +63,7 @@ async function toggleTaskChecked(taskName) {
     await getTasksFromDB();
 }
 
-function toggleCurrentList(listName) {
+async function toggleCurrentList(listName) {
     let newId = currentListIndex;
     for (let i = 0; i < lists.length; i++) {
         if (lists[i].name === listName) {
@@ -76,7 +74,7 @@ function toggleCurrentList(listName) {
 
     if (newId >= 0 && newId < lists.length) {
         currentListIndex = newId;
-        rerender();
+        await rerender();
     }
 }
 
@@ -85,7 +83,7 @@ async function deleteList(index) {
     await getListsFromDB();
     await getTasksFromDB();
     currentListIndex = index - 1;
-    rerender();
+    await rerender();
 }
 
 async function addNewTask() {
@@ -104,42 +102,49 @@ async function addNewTask() {
 }
 
 async function deleteTask(index) {
-    console.log(index);
     await deleteElementFromDB('tasks', index);
     await getTasksFromDB();
     await rerender();
 }
 
-function editTask(index) {
-    rerender();
+async function editTask(index) {
+    await rerender();
 
     const nodeList = document.getElementsByTagName("LI");
-    const childNodes = nodeList[index].childNodes;
+
+    let newIndex = 0;
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].list === lists[currentListIndex].name) {
+            if (tasks[i].id === index) {
+                break;
+            }
+            newIndex++;
+        }
+    }
+    const childNodes = nodeList[newIndex].childNodes;
     const input = document.createElement("INPUT");
     input.className = "editTaskInput";
-    input.onkeyup = function (event) {
+    input.onkeyup = async function (event) {
         if (event.key === "Enter") {
-            const tasks = JSON.parse(localStorage["tasks"]);
-            tasks[currentListIndex].list[index].item = this.value;
-            localStorage["tasks"] = JSON.stringify(tasks);
-            rerender();
+            await createPatch('tasks', index, {name: this.value, checked: false, list: lists[currentListIndex].name});
+            await rerender();
+            console.log("test")
         }
         if (event.key === "Escape") {
-            rerender();
+            await rerender();
         }
     };
-    const tasks = JSON.parse(localStorage["tasks"]);
-    input.value = tasks[currentListIndex].list[index].item;
-    nodeList[index].removeChild(childNodes[0]);
-    nodeList[index].appendChild(input);
+    input.value = tasks[index].name;
+    nodeList[newIndex].removeChild(childNodes[0]);
+    nodeList[newIndex].appendChild(input);
 
     //SET FOCUS ON INPUT
     document.getElementsByClassName("editTaskInput")[0].focus();
 }
 
-function rerender() {
-    displayAllTasks();
-    displayAllLists();
+async function rerender() {
+    await displayAllTasks();
+    await displayAllLists();
 }
 
 function displayAllLists() {
@@ -167,7 +172,7 @@ function displayAllTasks() {
             const li = document.createElement('li');
             li.appendChild(document.createTextNode(tasks[i].name));
             li.appendChild(createDeleteButton(tasks[i].id, deleteTask, "task"));
-            li.appendChild(createEditButton(i, editTask));
+            li.appendChild(createEditButton(tasks[i].id, editTask));
             container.appendChild(li);
         }
     }
