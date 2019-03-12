@@ -7,18 +7,6 @@
     {
       "id": 1,
       "name": "Personal"
-    },
-    {
-      "name": "newList",
-      "id": 2
-    },
-    {
-      "name": "testList",
-      "id": 3
-    },
-    {
-      "name": "new list 1",
-      "id": 4
     }
   ],
   "tasks": [
@@ -26,28 +14,34 @@
       "id": 0,
       "name": "You can add new task: type it and press 'Add' button",
       "list": "Tasks tutorial",
-      "checked": false
+      "checked": true
     },
     {
       "id": 1,
+      "name": "You should`nt be able to see this",
+      "list": "testList",
+      "checked": false
+    },
+    {
+      "id": 2,
       "name": "Click on task to complete it",
       "list": "Tasks tutorial",
       "checked": true
     },
     {
-      "id": 2,
+      "id": 3,
       "name": "Delete task by pressing 'x' button on it",
       "list": "Tasks tutorial",
       "checked": false
     },
     {
-      "id": 3,
+      "id": 4,
       "name": "Edit task -> click on 'Edit' button",
       "list": "Tasks tutorial",
-      "checked": false
+      "checked": true
     },
     {
-      "id": 4,
+      "id": 5,
       "name": "uughhh... Some boring info",
       "list": "Personal",
       "checked": true

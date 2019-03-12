@@ -51,17 +51,19 @@ async function addNewList() {
     }
 }
 
-function toggleTaskChecked(taskName) {
+async function toggleTaskChecked(taskName) {
     let newId = -1;
-    const tasks = JSON.parse(localStorage["tasks"]);
-    for (let i = 0; i < tasks[currentListIndex].list.length; i++) {
-        if (tasks[currentListIndex].list[i].item === taskName) {
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].name === taskName) {
             newId = i;
             break;
         }
     }
-    tasks[currentListIndex].list[newId].checked = !tasks[currentListIndex].list[newId].checked;
-    localStorage["tasks"] = JSON.stringify(tasks);
+    const task = tasks[newId];
+    task.checked = !task.checked;
+    await createPatch('tasks', newId, task);
+    await getTasksFromDB();
+    //tasks[currentListIndex].list[newId].checked = !tasks[currentListIndex].list[newId].checked;
 }
 
 function toggleCurrentList(listName) {
@@ -238,7 +240,14 @@ async function postRequest(url, data) {
         const content = await rawResponse.json();
 }
 
-/*
-postRequest('tasks', {name: 'TASK TEST', list: "list1", checked: true})
-    .then(data => console.log(data))
-    .catch(error => console.error(error));*/
+async function createPatch(url, id, data) {
+    console.log(id,data);
+    const rawResponse = await fetch(baseURL + '/' + url + '/' + id, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+        headers: new Headers({
+            'Content-Type': 'application/json'
+        })
+    });
+    const content = await rawResponse.json();
+}
