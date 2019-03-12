@@ -12,29 +12,23 @@ function setup() {
         localStorage["tasks"] = JSON.stringify(lists);
     }
 
-    document.getElementById("task-input").onkeypress = function() {
-        if (event.keyCode === 13) {
+    document.getElementById("task-input").onkeypress = function (event) {
+        if (event.key === "Enter") {
             addNewTask();
         }
     };
 
+    //TASK LISTS MOUSE HANDLER
     const taskLists = document.getElementById('task-lists');
-    for (let i = 0; i < taskLists.length; i++) {
-        taskLists[i].addEventListener('click', function (element) {
-            if (element.target.tagName === 'LI') {
-                toggleCurrentList(element.target.id);
-            }
-        }, false);
-    }
+    taskLists.addEventListener('click', function (element) {
+        if (element.target.tagName === 'LI') {
+            element.target.classList.toggle('currentList');
+            toggleCurrentList(element.target.innerHTML);
+        }
+    }, false);
 
+    //TASKS LIST MOUSE HANDLER
     const list = document.getElementById('tasks');
-    for (let i = 0; i < list.length; i++) {
-        list[i].addEventListener('click', function (element) {
-            if (element.target.tagName === 'LI') {
-                element.target.classList.toggle('checked');
-            }
-        }, false);
-    }
     list.addEventListener('click', function (element) {
         if (element.target.tagName === 'LI') {
             element.target.classList.toggle('checked');
@@ -45,10 +39,21 @@ function setup() {
     displayAllLists();
 }
 
-function toggleCurrentList(id) {
-    console.log(id);
-    currentListIndex = id;
-    displayAllTasks();
+function toggleCurrentList(listName) {
+    let newId = currentListIndex;
+    const tasks = JSON.parse(localStorage["tasks"]);
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].name === listName) {
+            newId = i;
+            break;
+        }
+    }
+
+    if (newId >= 0 && newId < tasks.length) {
+        currentListIndex = newId;
+        displayAllTasks();
+        displayAllLists();
+    }
 }
 
 function addNewTask() {
@@ -88,8 +93,8 @@ function editTask(index) {
     const childNodes = nodeList[index].childNodes;
     const input = document.createElement("INPUT");
     input.focus();
-    input.onkeypress = function() {
-        if (event.keyCode === 13) {
+    input.onkeypress = function (event) {
+        if (event.key === "Enter") {
             const tasks = JSON.parse(localStorage["tasks"]);
             tasks[currentListIndex].list[index].item = this.value;
             localStorage["tasks"] = JSON.stringify(tasks);
@@ -111,6 +116,12 @@ function displayAllLists() {
         li.appendChild(document.createTextNode(tasks[i].name));
         container.appendChild(li);
     }
+
+    //DISPLAY CURRENT LIST FLAG
+    disableAllFlagsInUL("task-lists", "currentList");
+    const taskLies = document.getElementById("task-lists");
+    taskLies.childNodes[currentListIndex].classList.add("currentList");
+
 }
 
 function displayAllTasks() {
@@ -124,6 +135,12 @@ function displayAllTasks() {
         li.appendChild(createDeleteButton(i));
         li.appendChild(createEditButton(i));
         container.appendChild(li);
+    }
+
+    disableAllFlagsInUL("tasks", "checked");
+    for (let i = 0; i < container.childNodes.length; i++) {
+        if (tasks[currentListIndex].list[i].checked)
+            container.childNodes[i].classList.add("checked");
     }
 }
 
@@ -148,4 +165,13 @@ function createEditButton(index) {
 
     };
     return i;
+}
+
+function disableAllFlagsInUL(listId, toggleElementId) {
+    const taskLies = document.getElementById(listId);
+    for (let i = 0; i < taskLies.childNodes.length; i++) {
+        if (currentListIndex === i) {
+            taskLies.childNodes[i].classList.remove(toggleElementId);
+        }
+    }
 }

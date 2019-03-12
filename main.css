@@ -54,6 +54,19 @@ ul li.checked::before {
     width: 7px;
 }
 
+ul li.currentList {
+    background: #888;
+    color: #fff;
+}
+
+ul li.currentList::before {
+    content: '•';
+    position: absolute;
+    top: 10px;
+    left: 16px;
+}
+
+
 #task-add-button {
     padding: 10px;
     width: 25%;
