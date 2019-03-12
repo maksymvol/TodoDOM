@@ -34,18 +34,19 @@ async function setup() {
     rerender();
 }
 
-function addNewList() {
+async function addNewList() {
     const input = document.getElementById("new-list-input");
 
     if (input.value == "") {
         alert("Please type list name before adding it");
     } else {
-        const newList = {list: [], name: input.value};
-        const tasks = JSON.parse(localStorage["tasks"]);
-        tasks.push(newList);
-        localStorage["tasks"] = JSON.stringify(tasks);
+        const newList = {name: input.value};
+        await postRequest('lists', newList)
+            .then(data => console.log(data))
+            .catch(error => console.error(error));
         input.value = "";
 
+        await getListsFromDB();
         rerender();
     }
 }
@@ -226,8 +227,7 @@ async function getTasksFromDB() {
         tasks = JSON.parse(JSON.stringify(data));
 }
 
-function postRequest(url, data) {
-    (async () => {
+async function postRequest(url, data) {
         const rawResponse = await fetch(baseURL + '/' + url, {
             method: 'POST',
             body: JSON.stringify(data),
@@ -236,8 +236,6 @@ function postRequest(url, data) {
             })
         });
         const content = await rawResponse.json();
-        getTasksFromDB();
-    })()
 }
 
 /*

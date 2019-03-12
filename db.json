@@ -1,10 +1,24 @@
 {
   "lists": [
     {
+      "id": 0,
       "name": "Tasks tutorial"
     },
     {
+      "id": 1,
       "name": "Personal"
+    },
+    {
+      "name": "newList",
+      "id": 2
+    },
+    {
+      "name": "testList",
+      "id": 3
+    },
+    {
+      "name": "new list 1",
+      "id": 4
     }
   ],
   "tasks": [
