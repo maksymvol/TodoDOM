@@ -32,11 +32,25 @@ function setup() {
     list.addEventListener('click', function (element) {
         if (element.target.tagName === 'LI') {
             element.target.classList.toggle('checked');
+            toggleTaskChecked(element.target.firstChild.textContent);
         }
     }, false);
 
     displayAllTasks();
     displayAllLists();
+}
+
+function toggleTaskChecked(taskName) {
+    let newId = -1;
+    const tasks = JSON.parse(localStorage["tasks"]);
+    for (let i = 0; i < tasks[currentListIndex].list.length; i++) {
+        if (tasks[currentListIndex].list[i].item === taskName) {
+            newId = i;
+            break;
+        }
+    }
+    tasks[currentListIndex].list[newId].checked = !tasks[currentListIndex].list[newId].checked;
+    localStorage["tasks"] = JSON.stringify(tasks);
 }
 
 function toggleCurrentList(listName) {
