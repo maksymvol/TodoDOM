@@ -23,7 +23,7 @@ function setup() {
     taskLists.addEventListener('click', function (element) {
         if (element.target.tagName === 'LI') {
             element.target.classList.toggle('currentList');
-            toggleCurrentList(element.target.innerHTML);
+            toggleCurrentList(element.target.firstChild.textContent);
         }
     }, false);
 
@@ -74,6 +74,7 @@ function toggleCurrentList(listName) {
     let newId = currentListIndex;
     const tasks = JSON.parse(localStorage["tasks"]);
     for (let i = 0; i < tasks.length; i++) {
+        console.log(tasks[i].name, listName);
         if (tasks[i].name === listName) {
             newId = i;
             break;
@@ -85,6 +86,14 @@ function toggleCurrentList(listName) {
         displayAllTasks();
         displayAllLists();
     }
+}
+
+function deleteList(index) {
+    console.log("delete list" + index);
+}
+
+function editListName(index) {
+    console.log("Edit list name" + index);
 }
 
 function addNewTask() {
@@ -145,6 +154,8 @@ function displayAllLists() {
     for (let i = 0; i < tasks.length; i++) {
         const li = document.createElement('li');
         li.appendChild(document.createTextNode(tasks[i].name));
+        li.appendChild(createDeleteButton(i, deleteList, "list"));
+        li.appendChild(createEditButton(i, editListName));
         container.appendChild(li);
     }
 
@@ -163,7 +174,7 @@ function displayAllTasks() {
     for (let i = 0; i < tasks[currentListIndex].list.length; i++) {
         const li = document.createElement('li');
         li.appendChild(document.createTextNode(tasks[currentListIndex].list[i].item));
-        li.appendChild(createDeleteButton(i, deleteTask));
+        li.appendChild(createDeleteButton(i, deleteTask, "task"));
         li.appendChild(createEditButton(i, editTask));
         container.appendChild(li);
     }
@@ -175,12 +186,12 @@ function displayAllTasks() {
     }
 }
 
-function createDeleteButton(index, targetFunction) {
+function createDeleteButton(index, targetFunction, targetTypeName) {
     const span = document.createElement("SPAN");
     span.className = "task-delete-button";
     span.appendChild(document.createTextNode("×"));
     span.onclick = function () {
-        if (confirm("You really want to delete this task?")) {
+        if (confirm("You really want to delete this " + targetTypeName + "?")) {
             targetFunction(index);
         }
     };
