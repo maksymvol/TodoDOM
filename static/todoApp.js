@@ -185,10 +185,13 @@ function displayAllTasks() {
     }
 
     disableAllFlagsInUL("tasks", "checked");
-    for (let i = 0; i < container.childNodes.length; i++) {
-        if (tasks[i].list === lists[currentListIndex]) {
-            if (tasks[i].checked)
-                container.childNodes[i].classList.add("checked");
+    let index = 0;
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].checked && tasks[i].list === lists[currentListIndex].name) {
+            container.childNodes[index].classList.add("checked");
+        }
+        if (tasks[i].list === lists[currentListIndex].name) {
+            index++;
         }
     }
 }

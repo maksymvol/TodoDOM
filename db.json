@@ -38,13 +38,13 @@
       "id": 4,
       "name": "Edit task -> click on 'Edit' button",
       "list": "Tasks tutorial",
-      "checked": true
+      "checked": false
     },
     {
       "id": 5,
       "name": "uughhh... Some boring info",
       "list": "Personal",
-      "checked": false
+      "checked": true
     }
   ]
 }
